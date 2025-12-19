@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nediya Admin</title>
+
+<style>
+body{
+  background:#0b0b0b;
+  color:#00ff99;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:#111;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+  box-shadow:0 0 20px #00ff9966;
+  width:280px;
+}
+
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:12px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+
+input{
+  background:#000;
+  border:1px solid #00ff99;
+  color:#00ff99;
+}
+
+button{
+  background:#00ff99;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.count{
+  font-size:38px;
+  margin-top:20px;
+  display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🔐 Admin Login</h2>
+
+  <input type="password" id="password" placeholder="Admin Password">
+  <button id="loginBtn">Login</button>
+
+  <div class="count" id="countBox">
+    👨‍💻 Total Opens<br>
+    <span id="visitorCount">0</span>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const ADMIN_PASSWORD = "nediya123";
+const counterRef = doc(db, "stats", "web_scanner");
+
+document.getElementById("loginBtn").onclick = async () => {
+  const pass = document.getElementById("password").value;
+
+  if (pass !== ADMIN_PASSWORD) {
+    alert("❌ Wrong password");
+    return;
+  }
+
+  const snap = await getDoc(counterRef);
+  document.getElementById("visitorCount").innerText =
+    snap.exists() ? snap.data().count : 0;
+
+  document.getElementById("countBox").style.display="block";
+};
+</script>
+
+</body>
+</html>
